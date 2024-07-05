@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Oro</title>
+    <style>
+        body {
+            background-image: url('https://r4.wallpaperflare.com/wallpaper/671/31/673/tv-show-star-vs-the-forces-of-evil-star-butterfly-wallpaper-a920088dc10a7dfbd63728bff031867d.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .panel {
+            width: 22%;
+            padding: 20px;
+            border: 2px solid #FF6EC7;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            margin: 20px;
+            display: inline-block;
+            vertical-align: top;
+            background-color: rgba(255, 255, 255, 0.9);
+            position: relative;
+        }
+        .payment-info {
+            width: 80%;
+            padding: 20px;
+            border: 2px solid #FF6EC7;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            margin: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            text-align: left;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #FF6EC7;
+        }
+        input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 5px 0;
+            border: 2px solid #FF6EC7;
+            border-radius: 5px;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            color: #FF6EC7;
+        }
+        p {
+            margin: 10px 0;
+            padding: 0;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #FF6EC7;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+        }
+    </style>
+    <script>
+        let goldRateR = 32.50;
+        let goldRateD = 5.60;
+        let listaOroGlobal = [];
+
+        function updateOroCalculations() {
+            const cantidad = parseInt(document.getElementById('cantidadOro').value) || 0;
+            const totalR = (cantidad / 1000) * goldRateR;
+            const totalD = (cantidad / 1000) * goldRateD;
+            listaOroGlobal = calcularListaOro(cantidad);
+
+            document.getElementById('totalROro').innerText = totalR.toFixed(2);
+            document.getElementById('totalDOro').innerText = totalD.toFixed(2);
+            document.getElementById('cantidadAnunciada').innerText = listaOroGlobal.join(', ');
+        }
+
+        function calcularListaOro(cantidad) {
+            const cantidadAnunciada = Math.floor(cantidad + (cantidad * 5.3 / 100));
+            if (cantidad <= 2500) {
+                return [cantidadAnunciada];
+            } else if (cantidad <= 5000) {
+                return dividirEnPartes(cantidadAnunciada, 2);
+            } else if (cantidad <= 7500) {
+                return dividirEnPartes(cantidadAnunciada, 3);
+            } else if (cantidad <= 10000) {
+                return dividirEnPartes(cantidadAnunciada, 4);
+            } else {
+                return [cantidadAnunciada];
+            }
+        }
+
+        function dividirEnPartes(total, partes) {
+            const min = Math.floor(total / (partes + 1));
+            const max = Math.ceil(total / partes);
+            let resultado = [];
+            let suma = 0;
+
+            for (let i = 0; i < partes - 1; i++) {
+                const valor = Math.floor(Math.random() * (max - min + 1)) + min;
+                resultado.push(valor);
+                suma += valor;
+            }
+
+            resultado.push(total - suma);
+            return resultado;
+        }
+
+        function copyToClipboard() {
+            const totalR = document.getElementById('totalROro').innerText;
+            const totalD = document.getElementById('totalDOro').innerText;
+            const cantidadAnunciada = document.getElementById('cantidadAnunciada').innerText;
+            const textToCopy = `Total en R$: ${totalR}\nTotal en $: ${totalD}\nCantidad de Oro a anunciar: ${cantidadAnunciada}`;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => alert('Totales copiados al portapapeles'))
+                .catch(err => alert('Error al copiar texto: ', err));
+        }
+
+        window.onload = function() {
+            document.getElementById('cantidadOro').value = 0;
+            updateOroCalculations();
+        }
+    </script>
+</head>
+<body>
+    <div class="panel">
+        <h2>Oro</h2>
+        <label for="cantidadOro">Cantidad de Oro:</label>
+        <input type="number" id="cantidadOro" value="0" oninput="updateOroCalculations()"><br>
+        <p>Total en R$ = "R$<span id="totalROro">0.00</span>"</p>
+        <p>Total en $ = "$<span id="totalDOro">0.00</span>"</p>
+        <p>Cantidad de Oro a anunciar: <span id="cantidadAnunciada">0</span></p>
+        <button onclick="copyToClipboard()">Copiar Totales</button>
+    </div>
+    <div class="payment-info">
+        <h2>Información de Pago</h2>
+        <p><strong>Pix:</strong> CELULAR 14988231270 Nombre: Victoria Stefany</p>
+        <p><strong>Mercado Pago:</strong> <a href="https://link.mercadopago.com.br/ervindanada">https://link.mercadopago.com.br/ervindanada</a> el precio será 6% más caro.</p>
+        <p><strong>Binance:</strong> estrella203@hotmail.com</p>
+    </div>
+</body>
+</html>
